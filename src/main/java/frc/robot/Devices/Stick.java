@@ -24,30 +24,38 @@ public class Stick extends SubsystemBase{
    
 
 
-  public Stick(){
-     
-    if (Math.abs(RjoystickX) < 0.10) {
-      RjoystickX = 0;
-     }
-  
-     if (Math.abs(RjoystickY) < 0.10) {
-      RjoystickY = 0;
-     }
-  
-     if (Math.abs(LjoystickX) < 0.10) {
-      LjoystickX = 0;
-     }
-  
-     if (Math.abs(LjoystickY) < 0.10) {
-      LjoystickY = 0;
-     }
-  
+  public Stick(){}
 
-  }
 
-  public double[] getX(){
-    double[] value={0,0,0};
-    return value;
+
+
+  public double[] getjoyaxis(boolean deadbanding){
+
+   double RjoystickX = Rjoystick.getX();
+   double RjoystickY = Rjoystick.getY();
+   double LjoystickX = Ljoystick.getX();
+   double LjoystickY = Ljoystick.getY();
+
+
+    if (deadbanding = true){
+      if (Math.abs(RjoystickX) < 0.10) {
+        RjoystickX = 0;
+       }
+    
+       if (Math.abs(RjoystickY) < 0.10) {
+        RjoystickY = 0;
+       }
+    
+       if (Math.abs(LjoystickX) < 0.10) {
+        LjoystickX = 0;
+       }
+    
+       if (Math.abs(LjoystickY) < 0.10) {
+        LjoystickY = 0;
+    }
+    
+    double[] joyaxis={RjoystickX, RjoystickY, LjoystickX, LjoystickY};
+    return joyaxis;}
   }
   
 
