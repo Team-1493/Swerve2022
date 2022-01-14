@@ -7,6 +7,7 @@ package frc.robot;
 
 
 import frc.robot.Devices.Stick;
+import frc.robot.commands.Drive;
 import frc.robot.subsystems.DriveSystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -17,10 +18,13 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Stick joystick = new Stick();
   private final DriveSystem drive = new DriveSystem(joystick);
-
+  private final Drive DriveCommand = new Drive(drive);
 
   
   public RobotContainer() {
+
+    drive.setDefaultCommand(DriveCommand);
+
     // Configure the button bindings
     configureButtonBindings();
   }

@@ -12,16 +12,14 @@ import frc.robot.subsystems.DriveSystem;
 /** An example command that uses an example subsystem. */
 public class Drive extends CommandBase {
   private DriveSystem m_driveSystem;
-  Supplier<double[]> m_stickState;
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 
 
 
 
-  public Drive(DriveSystem driveSystem, Supplier<double[]> stickState) {
+  public Drive(DriveSystem driveSystem) {
  
     m_driveSystem = driveSystem;
-    m_stickState = stickState;
 
     addRequirements(driveSystem);
   }
@@ -31,7 +29,7 @@ public class Drive extends CommandBase {
 
   @Override
   public void execute() {
-       
+       m_driveSystem.controlmotors();
       
   }
 
