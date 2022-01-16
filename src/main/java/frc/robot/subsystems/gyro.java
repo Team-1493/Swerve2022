@@ -38,7 +38,7 @@ public class gyro
         //gets gyro temp
         public class getTemp{
             double temp=pigeon.getTemp();
-            return temp;}
+            return double temp; }
         //Returns yaw angle in radians
         double absAngRad = (absAng*3.14)/180;
         return absAngRad;
