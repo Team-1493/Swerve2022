@@ -7,37 +7,37 @@ public class SwerveModule{
 
     
 public SwerveModule(int drivePort, int turnPort){
-    TalonFX motor1 = new TalonFX(drivePort);
-    TalonFX motor2 = new TalonFX(turnPort);
+    TalonFX DriveMotor = new TalonFX(drivePort);
+    TalonFX TurnMotor = new TalonFX(turnPort);
 
 
     // Factory default
-    motor1.configFactoryDefault();
-    motor2.configFactoryDefault();
+    DriveMotor.configFactoryDefault();
+    TurnMotor.configFactoryDefault();
 
     // Inverted - False
-    motor1.setInverted(false);
-    motor2.setInverted(false);
+    DriveMotor.setInverted(false);
+    TurnMotor.setInverted(false);
 
     // Brake mode
-    motor1.setNeutralMode(NeutralMode.Brake);
-    motor2.setNeutralMode(NeutralMode.Brake);
+    DriveMotor.setNeutralMode(NeutralMode.Brake);
+    TurnMotor.setNeutralMode(NeutralMode.Brake);
 
     // Peak output both forward and reverse in percentages
     // Forward
-    motor1.configPeakOutputForward(1);
-    motor2.configPeakOutputForward(1);
+    DriveMotor.configPeakOutputForward(1);
+    TurnMotor.configPeakOutputForward(1);
     // Reverse
-    motor1.configPeakOutputReverse(-1);
-    motor2.configPeakOutputReverse(-1);
+    DriveMotor.configPeakOutputReverse(-1);
+    TurnMotor.configPeakOutputReverse(-1);
 
     // Voltage Saturation
-    motor1.configVoltageCompSaturation(10);
-    motor2.configVoltageCompSaturation(10);
+    DriveMotor.configVoltageCompSaturation(10);
+    TurnMotor.configVoltageCompSaturation(10);
 
     // Voltage Compensation
-    motor1.configVoltageCompensation(true);
-    motor2.configVoltageCompensation(true);
+    DriveMotor.configVoltageCompensation(true);
+    TurnMotor.configVoltageCompensation(true);
 }
 
 }
