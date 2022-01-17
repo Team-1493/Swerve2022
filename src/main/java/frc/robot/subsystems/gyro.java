@@ -24,11 +24,7 @@ public class gyro
         double[] ypr_deg = new double[3];
         
         pigeon.getYawPitchRoll(ypr_deg);
-        double yawAngle = ypr_deg[0]; 
-        double absAng = getangle(yawAngle);
-        getOutPutVal(yawAngle);
-        getAngleRadians(absAng);
-        getTemp();  
+        double yawAngle = ypr_deg[0];
           
     }
     //returns 2d object
@@ -43,8 +39,11 @@ public class gyro
     }
     
     
-    public double getangle(double yawAngle) 
+    public double getangle() 
     {
+        double[] ypr_deg = new double[3];
+        pigeon.getYawPitchRoll(ypr_deg);
+        double yawAngle = ypr_deg[0]; 
         int ang;
         double outputval;
         double inputval;
@@ -61,19 +60,6 @@ public class gyro
         }
         return absAng;
     }
-    
-    public double getOutPutVal(double yawAngle) 
-    {
-        int ang;
-        double outputval;
-        double inputval;       
-        ang = 360;
-        
-        inputval = yawAngle;
-        outputval = inputval % ang;
-        
-        return outputval;         
-    }
         //gets gyro temp
     public double getTemp(){
             double temp=pigeon.getTemp();
@@ -81,9 +67,9 @@ public class gyro
                                 }
     
         //Returns yaw angle in radians
-    public double getAngleRadians(double absAng){
-        double absAngRad = (absAng*3.14)/180;
-        return absAngRad;
+    public double getAngleRadians(){
+        double AngRad = (getangle()*Math.PI)/180;
+        return AngRad;
     } 
 }
 
