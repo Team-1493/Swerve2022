@@ -4,10 +4,10 @@ package frc.robot.subsystems;
  
 public class shooter{
     
-    public shooter(int shooterPort){
-        TalonFX ShooterMotor = new TalonFX(shooterPort);
+    TalonFX shooterMotor = new
+TalonFX(10);
+    public shooter(){
+
     }
-
-
    
 }  
