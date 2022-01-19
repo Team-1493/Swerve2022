@@ -1,9 +1,9 @@
 package frc.robot.subsystems;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
 
 public class SwerveModule{
   //Drive Motor being defined
@@ -16,27 +16,29 @@ public class SwerveModule{
 
 
 
-public SwerveModule(){
+public SwerveModule(int ports1, int port2){
     Dmotor0.configFactoryDefault();
     Rmotor0.configFactoryDefault();
+    
     Dmotor0.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,25);
-    //    Rmotor0.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,25);
+    Rmotor0.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,25);
     Dmotor0.config_kF(0, 0.052);
+    
+    Rmotor0.config_kF(0,0);
+    Rmotor0.config_kP(0,0);
+    Rmotor0.config_kI(0,0);
+    Rmotor0.config_kD(0,0.5);
+    
 }
 
 
 public void motormove(double Dvel, double Rpos){
     Dmotor0.set(ControlMode.Velocity, Dvel);
-//    Rmotor0.set(ControlMode.Position, Rpos);
+    Rmotor0.set(ControlMode.Position, Rpos);
 
 
 
 }
-
-
-
-
-
 
 public double getDmotorvel(){
    double Dmotorvel = Dmotor0.getSelectedSensorVelocity();

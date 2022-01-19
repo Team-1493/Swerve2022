@@ -38,19 +38,19 @@ public class Stick extends SubsystemBase{
 
 
     
-    if (Math.abs(RjoystickX) < 0.10) {
+    if (Math.abs(RjoystickX) < 0.05) {
       RjoystickX = 0;
     }
     
-    if (Math.abs(RjoystickY) < 0.10) {
+    if (Math.abs(RjoystickY) < 0.05) {
       RjoystickY = 0;
     }
     
-    if (Math.abs(LjoystickX) < 0.10) {
+    if (Math.abs(LjoystickX) < 0.05) {
       LjoystickX = 0;
     }
     
-    if (Math.abs(LjoystickY) < 0.10) {
+    if (Math.abs(LjoystickY) < 0.05) {
         LjoystickY = 0;
     }
     
