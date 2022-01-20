@@ -2,51 +2,61 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.wpilibj.Joystick;
+
 
 import frc.robot.Devices.Stick;
 
 public class Intake{
-
+    TalonFX BottomIntakeMotor = new TalonFX(0);
+    TalonFX MiddleIntakeMotor = new TalonFX(1);
+    Joystick mystick = new Joystick(0);
 
 
     public Intake(){
-        TalonFX intake_motor1 = new TalonFX();
-        TalonFX intake_motor2 = new TalonFX();
     
         // Factory default
-        intake_motor1.configFactoryDefault();
-        intake_motor2.configFactoryDefault();
-    
+        BottomIntakeMotor.configFactoryDefault();
+        MiddleIntakeMotor.configFactoryDefault();
+        
         // Inverted - False
-        intake_motor1.setInverted(false);
-        intake_motor2.setInverted(false);
+        BottomIntakeMotor.setInverted(false);
+        MiddleIntakeMotor.setInverted(false);
     
         // Brake mode
-        intake_motor1.setNeutralMode(NeutralMode.Brake);
-        intake_motor2.setNeutralMode(NeutralMode.Brake);
+        BottomIntakeMotor.setNeutralMode(NeutralMode.Brake);
+        MiddleIntakeMotor.setNeutralMode(NeutralMode.Brake);
     
         // Peak output both forward and reverse in percentages
         // Forward
-        intake_motor1.configPeakOutputForward(1);
-        intake_motor2.configPeakOutputForward(1);
+        BottomIntakeMotor.configPeakOutputForward(1);
+        MiddleIntakeMotor.configPeakOutputForward(1);
         // Reverse
-        intake_motor1.configPeakOutputReverse(-1);
-        intake_motor2.configPeakOutputReverse(-1);
+        BottomIntakeMotor.configPeakOutputReverse(-1);
+        MiddleIntakeMotor.configPeakOutputReverse(-1);
     
         // Voltage Saturation
-        intake_motor1.configVoltageCompSaturation(10);
-        intake_motor2.configVoltageCompSaturation(10);
+        BottomIntakeMotor.configVoltageCompSaturation(10);
+        MiddleIntakeMotor.configVoltageCompSaturation(10);
     
         // Voltage Compensation
-        intake_motor1.configVoltageCompensation(true);
-        intake_motor2.configVoltageCompensation(true);
+        BottomIntakeMotor.configVoltageCompensation(true);
+        MiddleIntakeMotor.configVoltageCompensation(true);
     
     }
 
     
     public void IntakeSystem() {
-        intake_motor1.set(TalonFXControlMode.PercentOutput,0.5)
-        intake_motor2.set(TalonFXControlMode.PercentOutput,0.5)
+
+        if (mystick.getRawButton(1)) {
+        BottomIntakeMotor.set(TalonFXControlMode.PercentOutput,0.5);
+        MiddleIntakeMotor.set(TalonFXControlMode.PercentOutput,0.5);
+        }
+        else {
+        BottomIntakeMotor.set(TalonFXControlMode.PercentOutput,0);
+        MiddleIntakeMotor.set(TalonFXControlMode.PercentOutput,0);
+        }
 }
 
 }
