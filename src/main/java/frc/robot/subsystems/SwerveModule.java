@@ -25,7 +25,7 @@ public class SwerveModule{
     }
 
     public double getTurnPosition_Rad() {
-        return turnCoder.getAbsolutePosition();
+        return Math.toRadians(turnCoder.getAbsolutePosition());
     }
 }
                         

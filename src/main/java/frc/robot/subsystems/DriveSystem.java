@@ -5,8 +5,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Devices.Stick;
+
+import java.util.ArrayList;
 
 import com.ctre.phoenix.Util;
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -31,21 +34,44 @@ public class DriveSystem extends SubsystemBase{
 
     float maxVelocityMPS;
 
-    public DriveSystem(Stick joystick){
-        module[0] = new SwerveModule(dfr, tfr,?,?);
-        module[1] = new SwerveModule(dfl, tfl,?,?);
-        module[2] = new SwerveModule(dbr, tbr,?,?);
-        module[3] = new SwerveModule(dbl, tbl,?,?);
-        
+    int cfr = 8;
+    int cfl = 9;
+    int cbr = 10;
+    int cbl = 11;
 
+    Stick mJoystick;
+
+
+    double omegaScale = 1;
+
+    public double heading = 0;
+
+    
+    public DriveSystem(Stick joystick){
+        module[0] = new SwerveModule(dfr, tfr,cfr);
+        module[1] = new SwerveModule(dfl, tfl,cfl);
+        module[2] = new SwerveModule(dbr, tbr,cbr);
+        module[3] = new SwerveModule(dbl, tbl,cbl);
+        mJoystick = joystick;
+    }
+    public void Drive(double[] pos,double rotation){
+        DriveInput(pos, rotation);
+    }
+    public void Drive(){
+        double[] array = {mJoystick.getStick().getX(),mJoystick.getStick().getY()};
+        DriveInput(array, mJoystick.getStick().getZ());
+    }
+    void DriveInput(double[] pos,double rotation){
         SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
             new Translation2d(robotdim, -robotdim),
             new Translation2d(robotdim, +robotdim),
             new Translation2d(-robotdim, -robotdim),
             new Translation2d(-robotdim, +robotdim)
         );
+        double omega = rotation * omegaScale;//placeholder
+        heading += omega; 
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-            vy, vx, omega,  new Rotation2d(heading));
+            pos[1], pos[0], omega,  new Rotation2d(heading));
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
@@ -65,6 +91,9 @@ public class DriveSystem extends SubsystemBase{
             velocity[i]=moduleStatesOptimized[i].speedMetersPerSecond;
             // get the turn motor's rotation setpoint radians
             turnAngle[i]=moduleStatesOptimized[i].angle.getRadians();
+            module[i].drive.set(TalonFXControlMode.Velocity, velocity[i]);
+            module[i].turn.set(TalonFXControlMode.Position, turnAngle[i]);
+
         }
     }
 
@@ -73,10 +102,18 @@ public class DriveSystem extends SubsystemBase{
         double current = moduleState.angle.getDegrees();
         double out;
         
-        if (Math.abs(desired - current) < Math.abs(current - desired)){
-            out = desired - current;
+        if (Math.abs(desired - current) > 180){
+            if (current < desired){
+                //overflow negative
+                double overflowamount = -current;
+                out = overflowamount - (360 - desired);
+            }else{
+                //overflow positive
+                double overflowamount = 360 - current;
+                out = overflowamount + desired;
+            }
         }else{
-            out = -(current - desired);
+            out = desired - current;
         }
 
         moduleState.angle = new Rotation2d(out);
