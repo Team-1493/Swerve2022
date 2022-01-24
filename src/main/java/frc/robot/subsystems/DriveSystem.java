@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.Util;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -41,21 +43,37 @@ public class DriveSystem extends SubsystemBase{
     
 
     public void controlmotors(){
-        //The max rotation may be 4096 or 20480, want to save both in case one is wrong.
         double stickval[] = joystick.getjoyaxis();
         double vy =stickval[1]*19313; 
         double vx =stickval[2]*19313;  
         double omega=stickval[3]*4; // max rotation rate
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vy, vx, omega,  new Rotation2d(heading)); //Heading is gyro
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vy, vx, omega,  new Rotation2d(0));
+        double encPositionRad[] = new double[4];
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates,19313);
 
-        encPositionRad[i]=modules[i].getTurnPosition_Rad();
+        int i = 0;
+        while (i<4){
+        
+     //   encPositionRad[i]=module[i].getTurnPosition_Rad();
+        encPositionRad[i]=module[i].getRmotorpos();
 
-        moduleStatesOptimized[i]=Util.optimize(moduleStates[i],encPositionRad[i]);
+     //   module.StatesOptimized[i]=Util.optimize(moduleStates[i],encPositionRad[i]); // Create the StatesOptimized array within the drive system (no .module)
 
+        i++;
+        }
+
+
+       int rotationRate  = (stickval[3]*(maxRotationRate * (wheelDiameter * 2)))*(Math.PI/180);
+
+       int wheelCircumference = (wheelDiameter * Math.PI) /39.37;
+
+       int encoderPer100ms = (0.1 * gearRatio * encoderPerRotation) / wheelCircumference;
+     
+       
+       
 
 
 
