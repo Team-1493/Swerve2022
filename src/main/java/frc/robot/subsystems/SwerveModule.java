@@ -14,6 +14,7 @@ public class SwerveModule{
     public SwerveModule(int driveio, int turnio,  int turncoderio){
         turn = new TalonFX(driveio);
         drive = new TalonFX(turnio);
+        drive.config_kF(0, 0.05f);
         turnCoder = new CANCoder(turncoderio);
 
         turn.configRemoteFeedbackFilter(turnCoder, 0,25);

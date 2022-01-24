@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Stick extends SubsystemBase{
   private Joystick mystick;
 
-  public Stick(){
+  int joystickio = 0;
 
+  public Stick(){
+    mystick = new Joystick(joystickio);
   }
 
 
