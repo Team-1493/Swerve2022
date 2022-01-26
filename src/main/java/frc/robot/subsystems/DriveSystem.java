@@ -43,39 +43,42 @@ public class DriveSystem extends SubsystemBase{
     
 
     public void controlmotors(){
+       
         double stickval[] = joystick.getjoyaxis();
+        
+        int rotationRate  = (stickval[3]*(maxRotationRate * (wheelDiameter * 2)))*(Math.PI/180);
+
+        int wheelCircumference = (wheelDiameter * Math.PI) /39.37;       //Must create the non-calculated variabled in a function with an array returned and call it
+ 
+        int encoderPer100ms = (0.1 * gearRatio * encoderPerRotation) / wheelCircumference;
+       
+        int radianstoUnits = (maxUnitsForPosition * (2*Math.PI));       
+        
         double vy =stickval[1]*19313; 
         double vx =stickval[2]*19313;  
         double omega=stickval[3]*4; // max rotation rate
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vy, vx, omega,  new Rotation2d(0));
-        double encPositionRad[] = new double[4];
+        double encPosition[] = new double[4];
+        double StatesOptimized[] = new double[4];
+
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
 
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates,19313);
 
+
         int i = 0;
         while (i<4){
         
      //   encPositionRad[i]=module[i].getTurnPosition_Rad();
-        encPositionRad[i]=module[i].getRmotorpos();
+        encPosition[i]=module[i].getRmotorpos();
 
-     //   module.StatesOptimized[i]=Util.optimize(moduleStates[i],encPositionRad[i]); // Create the StatesOptimized array within the drive system (no .module)
-
+        StatesOptimized[i]=Util.optimize(moduleStates[i],encPosition[i]);
         i++;
         }
 
-
-       int rotationRate  = (stickval[3]*(maxRotationRate * (wheelDiameter * 2)))*(Math.PI/180);
-
-       int wheelCircumference = (wheelDiameter * Math.PI) /39.37;
-
-       int encoderPer100ms = (0.1 * gearRatio * encoderPerRotation) / wheelCircumference;
-     
+        int velocityEncoderUnits = radianstoUnits * encPosition[0];
        
-       
-
-
 
       
         module[0].motormove(joystick.getjoyaxis()[3]*19313, joystick.getjoyaxis()[0]*4096);
