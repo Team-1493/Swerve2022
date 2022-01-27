@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+
 import com.ctre.phoenix.Util;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Devices.Stick;
 
 public class DriveSystem extends SubsystemBase{
+
+    double
 
     SwerveModule[] module = new SwerveModule[4];
 
@@ -46,20 +49,29 @@ public class DriveSystem extends SubsystemBase{
        
         double stickval[] = joystick.getjoyaxis();
         
-        int rotationRate  = (stickval[3]*(maxRotationRate * (wheelDiameter * 2)))*(Math.PI/180);
-
-        int wheelCircumference = (wheelDiameter * Math.PI) /39.37;       //Must create the non-calculated variabled in a function with an array returned and call it
- 
-        int encoderPer100ms = (0.1 * gearRatio * encoderPerRotation) / wheelCircumference;
-       
-        int radianstoUnits = (maxUnitsForPosition * (2*Math.PI));       
+        int shaft = 6500; //rotations per minute 
+        double wheelDiameter = 3.95; // in inches
+        int maxRotationRate = 225; //degrees per second
+        double gearRatio = 8.1428;
+        int encoderPerRotation = 2048; //Number of encoder units per rotation
+        int maxUnitsForPosition = 4096;
         
-        double vy =stickval[1]*19313; 
-        double vx =stickval[2]*19313;  
-        double omega=stickval[3]*4; // max rotation rate
+        double wheelCircumference = (wheelDiameter * Math.PI) /39.37; // Calculates the circumference using the diameter and converts to meters
+
+        double rotationRatePosition  = (stickval[0]*(maxRotationRate) * (wheelCircumference));
+                //Must move nomncalculated variable out of this class, which is repeated. Must make maxRotationRate & encoderper100ms
+        double encoderPer100ms = (0.1 * gearRatio * encoderPerRotation) / wheelCircumference;
+        double rotationRateVelocityX = encoderPer100ms * stickval[2];
+        double rotationRateVelocityY = encoderPer100ms * stickval[3];
+
+        double radianstoUnits = (maxUnitsForPosition * (2*Math.PI));       
+        
+        double vy =rotationRateVelocityY; 
+        double vx =rotationRateVelocityX;  
+        double omega=stickval[3]*rotationRatePosition;
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vy, vx, omega,  new Rotation2d(0));
         double encPosition[] = new double[4];
-        double StatesOptimized[] = new double[4];
+        SwerveModuleState StatesOptimized[] = new SwerveModuleState[4];
 
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
@@ -73,12 +85,13 @@ public class DriveSystem extends SubsystemBase{
      //   encPositionRad[i]=module[i].getTurnPosition_Rad();
         encPosition[i]=module[i].getRmotorpos();
 
-        StatesOptimized[i]=Util.optimize(moduleStates[i],encPosition[i]);
+        StatesOptimized[i] = module[i].optimize(moduleStates[i],encPosition[i]);
         i++;
         }
 
-        int velocityEncoderUnits = radianstoUnits * encPosition[0];
+        double velocityEncoderUnits = radianstoUnits * encPosition[0];
        
+
 
       
         module[0].motormove(joystick.getjoyaxis()[3]*19313, joystick.getjoyaxis()[0]*4096);

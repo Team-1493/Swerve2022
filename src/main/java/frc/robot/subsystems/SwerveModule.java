@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class SwerveModule{
@@ -31,13 +32,6 @@ public SwerveModule(int ports1, int port2){
     Rmotor0.config_kP(0,0);
     Rmotor0.config_kI(0,0);
     Rmotor0.config_kD(0,0.5);
-    
-    int shaft = 6500; //rotations per minute 
-    double wheelDiameter = 3.95;
-    int maxRotationRate = 225; //degrees per second
-    double gearRatio = 8.1428;
-    int encoderPerRotation = 2048; //Number of encoder units per rotation
-    int maxUnitsForPosition = 4096;
 
 
 
@@ -75,7 +69,7 @@ public double getRmotorpos(){
     return Rmotorpos;
 }
 
-public double[] optimize(SwerveModuleState moduleStates, double encPosition){
+public SwerveModuleState optimize(SwerveModuleState moduleStates, double encPosition){
     double moduleVelocity = moduleStates.speedMetersPerSecond;
     double modulePosition = encPosition;
     double goalPosition = moduleStates.angle.getRadians();
@@ -94,11 +88,8 @@ public double[] optimize(SwerveModuleState moduleStates, double encPosition){
     if (Math.abs(anglepath3) < (anglepath2) && (Math.abs(anglepath3) < (anglepath1)));
         optimizedAngle = anglepath3;
         optimizedVelocity = moduleVelocity*-1;
-    
-    double optimizedAngleRad = optimizedAngle*(Math.PI/180);
-    
-    double[] optimization = {optimizedVelocity, optimizedAngleRad};
-    return optimization;
+
+    return new SwerveModuleState(optimizedVelocity,new Rotation2d(optimizedAngle));
 }
 
 
