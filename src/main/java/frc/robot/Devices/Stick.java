@@ -13,14 +13,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Stick extends SubsystemBase{
   private Joystick mystick;
-   Joystick Rjoystick = new Joystick(0);
-   Joystick Ljoystick = new Joystick(1);
+   Joystick joystick = new Joystick(0);
    
-   double RjoystickX = Rjoystick.getX();
-   double RjoystickY = Rjoystick.getY();
-   double LjoystickX = Ljoystick.getX();
-   double LjoystickY = Ljoystick.getY();
-   
+   double RjoystickX = joystick.getRawAxis(2);
+   double RjoystickY = joystick.getRawAxis(3);
+   double LjoystickX = joystick.getRawAxis(0);
+   double LjoystickY = joystick.getRawAxis(1);
    
 
 
@@ -31,10 +29,10 @@ public class Stick extends SubsystemBase{
 
   public double[] getjoyaxis(){
 
-   double RjoystickX = Rjoystick.getX();
-   double RjoystickY = Rjoystick.getY();
-   double LjoystickX = Ljoystick.getX();
-   double LjoystickY = Ljoystick.getY();
+    double RjoystickX = joystick.getRawAxis(2);
+    double RjoystickY = joystick.getRawAxis(3);
+    double LjoystickX = joystick.getRawAxis(0);
+    double LjoystickY = joystick.getRawAxis(1);
 
 
     

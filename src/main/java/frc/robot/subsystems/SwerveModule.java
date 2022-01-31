@@ -17,6 +17,17 @@ public class SwerveModule{
 
  //Setting Drive Motor Defaults
  //This was causing an error, I'll complete setting defaults later
+ 
+ int maxUnitsForPosition = 4096;
+ double wheelDiameter = 3.95; // in inches
+ double wheelCircumference = (wheelDiameter * Math.PI) /39.37;
+ double gearRatio = 8.1428;
+ int encoderPerRotation = 2048; //Number of encoder units per rotation
+
+
+ double encoderPer100ms = (0.1 * gearRatio * encoderPerRotation) / wheelCircumference;
+ double radianstoUnits = (maxUnitsForPosition * (2*Math.PI));
+
 
 
 
@@ -40,9 +51,12 @@ public SwerveModule(int ports1, int port2){
 
 public void motormove(double Dvel, double Rpos){
     
+    double CorrectDvel = Dvel * encoderPer100ms; //converting the Dvel that is in meters per second to encoder units per second
+    double CorrectRpos = Rpos * radianstoUnits; //converting the Rpos that is in radians to encoder units
+
     
-    Dmotor0.set(ControlMode.Velocity, Dvel);
-    Rmotor0.set(ControlMode.Position, Rpos);
+    Dmotor0.set(ControlMode.Velocity, CorrectDvel);
+    Rmotor0.set(ControlMode.Position, CorrectRpos);
     
 
 
@@ -71,13 +85,12 @@ public double getRmotorpos(){
 
 public SwerveModuleState optimize(SwerveModuleState moduleStates, double encPosition){
     double moduleVelocity = moduleStates.speedMetersPerSecond;
-    double modulePosition = encPosition;
+    double modulePosition = encPosition % 2;
     double goalPosition = moduleStates.angle.getRadians();
     
-    double moduleAngle = (modulePosition*(180/Math.PI)) % 360;
-    double anglepath1 = (goalPosition - moduleAngle);
-    double anglepath2 = -(360 - anglepath1);
-    double anglepath3 = (goalPosition-180) - moduleAngle;
+    double anglepath1 = (goalPosition - modulePosition);
+    double anglepath2 = -(2 - anglepath1);
+    double anglepath3 = (goalPosition-1) - modulePosition;
 
     if (Math.abs(anglepath1) < (anglepath2) && ( Math.abs(anglepath1) < (anglepath3)));
         double optimizedAngle = anglepath1;
