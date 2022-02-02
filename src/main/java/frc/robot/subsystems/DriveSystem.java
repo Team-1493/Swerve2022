@@ -79,8 +79,9 @@ public class DriveSystem extends SubsystemBase{
         while (i<4){
         
         encPosition[i]=module[i].getRmotorpos();
-
+            System.out.println("modulespeed "+moduleStates[i].speedMetersPerSecond);
         StatesOptimized[i] = module[i].optimize(moduleStates[i],encPosition[i]);
+        System.out.println("modulespeedOpt "+StatesOptimized[i].speedMetersPerSecond);
         
         //converting position from radians to encoder units
         

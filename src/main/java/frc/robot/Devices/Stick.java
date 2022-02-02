@@ -34,8 +34,11 @@ public class Stick extends SubsystemBase{
     double LjoystickX = joystick.getRawAxis(0);
     double LjoystickY = joystick.getRawAxis(1);
 
+    System.out.println("RjoystickX "+RjoystickX);
+    System.out.println("LjoystickX "+LjoystickX);
+    System.out.println("RjoystickY "+RjoystickY);
+    System.out.println("LjoystickY "+LjoystickY);
 
-    
     if (Math.abs(RjoystickX) < 0.05) {
       RjoystickX = 0;
     }
