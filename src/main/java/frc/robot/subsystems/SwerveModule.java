@@ -8,6 +8,7 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule{
   //Drive Motor being defined
@@ -25,12 +26,14 @@ public class SwerveModule{
 
  TalonFX Dmotor;
  TalonFX Rmotor;
-
+String tname="";
  double encoderPer100ms = (0.1 * gearRatio * encoderPerRotation) / wheelCircumference;
- double radianstoUnits = (maxUnitsForPosition * (2*Math.PI));
+ double radianstoUnits = maxUnitsForPosition/ (2*Math.PI);
 
 
-public SwerveModule(int port1, int port2){
+public SwerveModule(int port1, int port2)
+{
+    tname="turnMotor"+port2;
     Dmotor = new TalonFX(port1);
     Rmotor = new TalonFX(port2);
 
@@ -39,12 +42,12 @@ public SwerveModule(int port1, int port2){
     
     Dmotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,25);
     Rmotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,25);
-    Dmotor.config_kF(0, 0.052);
+    Dmotor.config_kF(0, 0.052); //original 0.052
     
-    Rmotor.config_kF(0,0);
-    Rmotor.config_kP(0,0);
-    Rmotor.config_kI(0,0);
-    Rmotor.config_kD(0,0.5);
+    Rmotor.config_kF(0,0);  //original 0
+    Rmotor.config_kP(0,0.003);    //original 0.5
+    Rmotor.config_kI(0,0);  //original 0
+    Rmotor.config_kD(0,0);  //original 0
 
 
 
@@ -52,13 +55,13 @@ public SwerveModule(int port1, int port2){
 
 
 public void motormove(double Dvel, double Rpos){
-    System.out.println("Dvel"+Dvel);
+
     
     double CorrectDvel = Dvel * encoderPer100ms; //converting the Dvel that is in meters per second to encoder units per second
     double CorrectRpos = Rpos * radianstoUnits; //converting the Rpos that is in radians to encoder units
-
-    Dmotor.set(ControlMode.Velocity, CorrectDvel);
-    Rmotor.set(ControlMode.Position, CorrectRpos);
+    SmartDashboard.putNumber(tname+" CorrectRPos", CorrectRpos);
+   //Dmotor.set(ControlMode.Velocity, CorrectDvel);
+   Rmotor.set(ControlMode.Position, CorrectRpos);
     
 
 
@@ -87,12 +90,12 @@ public double getRmotorpos(){
 
 public SwerveModuleState optimize(SwerveModuleState moduleStates, double encPosition){
     double moduleVelocity = moduleStates.speedMetersPerSecond;
-    double modulePosition = encPosition % 2;
-    double goalPosition = moduleStates.angle.getRadians();
+    double goalPosition = (encPosition * 180/Math.PI) % 360;  //Was module position
+    double modulePosition = moduleStates.angle.getDegrees();  //Was goal position
     
     double anglepath1 = (goalPosition - modulePosition);
-    double anglepath2 = -(2 - anglepath1);
-    double anglepath3 = (goalPosition-1) - modulePosition;
+    double anglepath2 = -(360 - anglepath1);
+    double anglepath3 = (goalPosition-180) - modulePosition;
 
     if (Math.abs(anglepath1) < (anglepath2) && ( Math.abs(anglepath1) < (anglepath3)));
         double optimizedAngle = anglepath1;

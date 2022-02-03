@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Devices.Stick;
 
@@ -58,7 +59,7 @@ public class DriveSystem extends SubsystemBase{
         double stickval[] = joystick.getjoyaxis();
         
 
-        double omega  = (stickval[0]*(maxRotationRate*(Math.PI/180)) * (wheelCircumference)); //rotation or position of wheel
+        double omega  = (stickval[0]*(maxRotationRate*(Math.PI/180))); //rotation or position of wheel
 
         double vx = maxMetersPerSecond * stickval[2];  // velocity x
         double vy = maxMetersPerSecond * stickval[3];  // velocity y
@@ -79,9 +80,9 @@ public class DriveSystem extends SubsystemBase{
         while (i<4){
         
         encPosition[i]=module[i].getRmotorpos();
-            System.out.println("modulespeed "+moduleStates[i].speedMetersPerSecond);
+            
         StatesOptimized[i] = module[i].optimize(moduleStates[i],encPosition[i]);
-        System.out.println("modulespeedOpt "+StatesOptimized[i].speedMetersPerSecond);
+        
         
         //converting position from radians to encoder units
         
@@ -89,6 +90,13 @@ public class DriveSystem extends SubsystemBase{
 
         i++;
         }
+        SmartDashboard.putNumber("turnPos 1",encPosition[1]);
+        SmartDashboard.putNumber("turnPos 2",encPosition[2]);
+        SmartDashboard.putNumber("OptPos 1",StatesOptimized[1].angle.getRadians());
+        SmartDashboard.putNumber("OptPos 2",StatesOptimized[2].angle.getRadians());
+
+
+
        
 
     }
