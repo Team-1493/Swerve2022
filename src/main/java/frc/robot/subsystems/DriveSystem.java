@@ -92,8 +92,8 @@ public class DriveSystem extends SubsystemBase{
         }
         SmartDashboard.putNumber("turnPos 1",encPosition[1]);
         SmartDashboard.putNumber("turnPos 2",encPosition[2]);
-        SmartDashboard.putNumber("OptPos 1",StatesOptimized[1].angle.getRadians());
-        SmartDashboard.putNumber("OptPos 2",StatesOptimized[2].angle.getRadians());
+        SmartDashboard.putNumber("OptPos 1",StatesOptimized[0].speedMetersPerSecond);
+        SmartDashboard.putNumber("OptPos 2",StatesOptimized[1].angle.getRadians());
 
 
 

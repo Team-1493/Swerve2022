@@ -93,19 +93,15 @@ public SwerveModuleState optimize(SwerveModuleState moduleStates, double encPosi
     double goalPosition = (encPosition * 180/Math.PI) % 360;  //Was module position
     double modulePosition = moduleStates.angle.getDegrees();  //Was goal position
     
-    double anglepath1 = (goalPosition - modulePosition);
-    double anglepath2 = -(360 - anglepath1);
-    double anglepath3 = (goalPosition-180) - modulePosition;
+    double anglepath1 = Math.abs((Math.abs(goalPosition - modulePosition)-180));
+    SmartDashboard.putNumber("anglepath1",anglepath1);
 
-    if (Math.abs(anglepath1) < (anglepath2) && ( Math.abs(anglepath1) < (anglepath3)));
+    if (anglepath1 < 91);
         double optimizedAngle = anglepath1;
-        double optimizedVelocity = moduleVelocity*1;
-    if (Math.abs(anglepath2) < (anglepath1) && (Math.abs(anglepath2) < (anglepath3)));
-        optimizedAngle = anglepath2;
-        optimizedVelocity = moduleVelocity*1;
-    if (Math.abs(anglepath3) < (anglepath2) && (Math.abs(anglepath3) < (anglepath1)));
-        optimizedAngle = anglepath3;
-        optimizedVelocity = moduleVelocity*-1;
+        double optimizedVelocity = Math.abs(moduleVelocity);
+    if (anglepath1 > 90);
+        optimizedAngle = anglepath1 + 180;
+        optimizedVelocity = -1 * (Math.abs(moduleVelocity));
 
     return new SwerveModuleState(optimizedVelocity,new Rotation2d(optimizedAngle));
 }
