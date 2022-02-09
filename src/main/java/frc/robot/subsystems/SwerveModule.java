@@ -90,18 +90,32 @@ public double getRmotorpos(){
 
 public SwerveModuleState optimize(SwerveModuleState moduleStates, double encPosition){
     double moduleVelocity = moduleStates.speedMetersPerSecond;
-    double goalPosition = (encPosition * 180/Math.PI) % 360;  //Was module position
-    double modulePosition = moduleStates.angle.getDegrees();  //Was goal position
-    
-    double anglepath1 = Math.abs((Math.abs(goalPosition - modulePosition)-180));
-    SmartDashboard.putNumber("anglepath1",anglepath1);
+    double modulePosition = (encPosition * 180/Math.PI) % 360; 
+    double goalPosition = moduleStates.angle.getDegrees();  
+    double optimizedAngle=0;
+    double optimizedVelocity=0;
 
-    if (anglepath1 < 91);
-        double optimizedAngle = anglepath1;
-        double optimizedVelocity = Math.abs(moduleVelocity);
-    if (anglepath1 > 90);
-        optimizedAngle = anglepath1 + 180;
-        optimizedVelocity = -1 * (Math.abs(moduleVelocity));
+    double angleDifference = (goalPosition - modulePosition);
+    SmartDashboard.putNumber("goalPosition",goalPosition);
+    SmartDashboard.putNumber("modulePosition",modulePosition);
+    SmartDashboard.putNumber("moduleVelocity",moduleVelocity);
+
+    SmartDashboard.putNumber("AngleDifference",angleDifference);
+
+    if (Math.abs(angleDifference) <= 90){
+        optimizedAngle = angleDifference;
+        optimizedVelocity = Math.abs(moduleVelocity);
+    }
+
+    if (angleDifference > 90){
+        optimizedAngle = goalPosition - 180;
+        optimizedVelocity =  -1 * Math.abs(moduleVelocity);
+    }
+
+    if (angleDifference < -90){
+        optimizedAngle = goalPosition + 180;
+        optimizedVelocity =  -1 * Math.abs(moduleVelocity);
+    }
 
     return new SwerveModuleState(optimizedVelocity,new Rotation2d(optimizedAngle));
 }

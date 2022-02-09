@@ -57,14 +57,19 @@ public class DriveSystem extends SubsystemBase{
     public void controlmotors(){
        
         double stickval[] = joystick.getjoyaxis();
-        
+        SmartDashboard.putNumber("stickval0",stickval[0]);      
+        SmartDashboard.putNumber("stickval1",stickval[1]);    
+        SmartDashboard.putNumber("stickval2",stickval[2]);    
+        SmartDashboard.putNumber("stickval3",stickval[3]);
 
         double omega  = (stickval[0]*(maxRotationRate*(Math.PI/180))); //rotation or position of wheel
 
-        double vx = maxMetersPerSecond * stickval[2];  // velocity x
-        double vy = maxMetersPerSecond * stickval[3];  // velocity y
+        double vx = -maxMetersPerSecond * stickval[2];  // velocity x
+        double vy = -maxMetersPerSecond * stickval[3];  // velocity y
        
-        
+        SmartDashboard.putNumber("omega",omega);
+        SmartDashboard.putNumber("vx",vx);
+        SmartDashboard.putNumber("xy", vy);
 
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vy, vx, omega,  new Rotation2d(0));
         double encPosition[] = new double[4];
