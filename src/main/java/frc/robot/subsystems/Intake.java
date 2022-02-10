@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Devices.Stick;
 
 public class Intake{
-    TalonFX LowerPositionMotor = new TalonFX(0);
-    TalonFX UpperPositionMotor = new TalonFX(1);
-    TalonFX IntakeMotor = new TalonFX(2);
+    TalonFX LowerPositionMotor = new TalonFX(10);
+    TalonFX UpperPositionMotor = new TalonFX(11);
+    TalonFX IntakeMotor = new TalonFX(6);
     Joystick mystick = new Joystick(0);
     DigitalInput LowerPositionInput = new DigitalInput(0);
     DigitalInput UpperPositionInput = new DigitalInput(1);
@@ -65,6 +65,14 @@ public class Intake{
             IntakeMotor.set(ControlMode.PercentOutput, 0);
             LowerPositionMotor.set(ControlMode.PercentOutput, 0.5);
         }
+
+        if (mystick.getRawButton(2)) {
+            UpperPositionMotor.set(ControlMode.PercentOutput, 0.5);
+        }
+        else {
+            UpperPositionMotor.set(ControlMode.PercentOutput, 0.5);
+        }
+
 
         //Check if there is a ball in the lower position
         if (LowerPositionInput.get()) {
