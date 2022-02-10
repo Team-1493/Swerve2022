@@ -44,10 +44,10 @@ public class DriveSystem extends SubsystemBase{
     Stick joystick;
 
     public DriveSystem(Stick m_joystick){
-        module[0] = new SwerveModule(1,2);
-        module[1] = new SwerveModule(3,4);
-        module[2] = new SwerveModule(5,6);
-        module[3] = new SwerveModule(7,8);
+        module[0] = new SwerveModule(1,2, 11);
+        module[1] = new SwerveModule(3,4, 13);
+        module[2] = new SwerveModule(5,6, 15);
+        module[3] = new SwerveModule(7,8, 17);
 
 
         joystick=m_joystick;

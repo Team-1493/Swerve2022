@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,16 +27,18 @@ public class SwerveModule{
 
  TalonFX Dmotor;
  TalonFX Rmotor;
+ CANCoder canCoder;
 String tname="";
  double encoderPer100ms = (0.1 * gearRatio * encoderPerRotation) / wheelCircumference;
  double radianstoUnits = maxUnitsForPosition/ (2*Math.PI);
 
 
-public SwerveModule(int port1, int port2)
+public SwerveModule(int port1, int port2, int port3)
 {
     tname="turnMotor"+port2;
     Dmotor = new TalonFX(port1);
     Rmotor = new TalonFX(port2);
+    canCoder = new CANCoder(port3);
 
     Dmotor.configFactoryDefault();
     Rmotor.configFactoryDefault();
@@ -83,7 +86,7 @@ public double getRmotorvel(){
 }
 
 public double getRmotorpos(){
-    double Rmotorpos = Rmotor.getSelectedSensorPosition();
+    double Rmotorpos = canCoder.getPosition();
     //might need to convert to radians?
     return Rmotorpos;
 }
@@ -108,16 +111,16 @@ public SwerveModuleState optimize(SwerveModuleState moduleStates, double encPosi
     }
 
     if (angleDifference > 90){
-        optimizedAngle = goalPosition - 180;
+        optimizedAngle = (goalPosition - 180);
         optimizedVelocity =  -1 * Math.abs(moduleVelocity);
     }
 
     if (angleDifference < -90){
-        optimizedAngle = goalPosition + 180;
+        optimizedAngle = (goalPosition + 180);
         optimizedVelocity =  -1 * Math.abs(moduleVelocity);
     }
 
-    return new SwerveModuleState(optimizedVelocity,new Rotation2d(optimizedAngle));
+    return new SwerveModuleState(optimizedVelocity,new Rotation2d((optimizedAngle)*(Math.PI/180)));
 }
 
 
