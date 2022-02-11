@@ -23,7 +23,7 @@ public class SwerveModule{
  double wheelDiameter = 3.95; // in inches
  double wheelCircumference = (wheelDiameter * Math.PI) /39.37;
  double gearRatio = 8.1428;
- int encoderPerRotation = 2048; //Number of encoder units per rotation
+ int encoderPerRotation = 4096; //Number of encoder units per rotation
 
  TalonFX Dmotor;
  TalonFX Rmotor;
@@ -40,15 +40,24 @@ public SwerveModule(int port1, int port2, int port3)
     Rmotor = new TalonFX(port2);
     canCoder = new CANCoder(port3);
 
+    canCoder.configFactoryDefault();
+    canCoder.configSensorDirection(false);
+
+
+
     Dmotor.configFactoryDefault();
     Rmotor.configFactoryDefault();
     
     Dmotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,25);
-    Rmotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0,25);
-    Dmotor.config_kF(0, 0.052); //original 0.052
+
+    Rmotor.configRemoteFeedbackFilter(canCoder, 0);
+    Rmotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.RemoteSensor0, 0, 25);
+
+
+   Dmotor.config_kF(0, 0.052); //original 0.052
     
     Rmotor.config_kF(0,0);  //original 0
-    Rmotor.config_kP(0,0.003);    //original 0.5
+    Rmotor.config_kP(0,0.4);    //original 0.5
     Rmotor.config_kI(0,0);  //original 0
     Rmotor.config_kD(0,0);  //original 0
 
@@ -63,7 +72,7 @@ public void motormove(double Dvel, double Rpos){
     double CorrectDvel = Dvel * encoderPer100ms; //converting the Dvel that is in meters per second to encoder units per second
     double CorrectRpos = Rpos * radianstoUnits; //converting the Rpos that is in radians to encoder units
     SmartDashboard.putNumber(tname+" CorrectRPos", CorrectRpos);
-   //Dmotor.set(ControlMode.Velocity, CorrectDvel);
+//Dmotor.set(ControlMode.Velocity, CorrectDvel);
    Rmotor.set(ControlMode.Position, CorrectRpos);
     
 
@@ -87,7 +96,7 @@ public double getRmotorvel(){
 
 public double getRmotorpos(){
     double Rmotorpos = canCoder.getPosition();
-    //might need to convert to radians?
+    
     return Rmotorpos;
 }
 
@@ -98,7 +107,10 @@ public SwerveModuleState optimize(SwerveModuleState moduleStates, double encPosi
     double optimizedAngle=0;
     double optimizedVelocity=0;
 
+
     double angleDifference = (goalPosition - modulePosition);
+
+    
     SmartDashboard.putNumber("goalPosition",goalPosition);
     SmartDashboard.putNumber("modulePosition",modulePosition);
     SmartDashboard.putNumber("moduleVelocity",moduleVelocity);

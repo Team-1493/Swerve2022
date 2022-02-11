@@ -17,7 +17,7 @@ public class DriveSystem extends SubsystemBase{
     double gearRatio = 8.1428;
     int encoderPerRotation = 2048; //Number of encoder units per rotation
     int maxUnitsForPosition = 4096;
-    int maxMetersPerSecond = 10; //this is an estimation
+    int maxMetersPerSecond = 5; //this is an estimation
 
 
     double wheelCircumference = (wheelDiameter * Math.PI) /39.37; // Calculates the circumference using the diameter and converts to meters    
@@ -45,9 +45,9 @@ public class DriveSystem extends SubsystemBase{
 
     public DriveSystem(Stick m_joystick){
         module[0] = new SwerveModule(1,2, 11);
-        module[1] = new SwerveModule(3,4, 13);
-        module[2] = new SwerveModule(5,6, 15);
-        module[3] = new SwerveModule(7,8, 17);
+      //  module[1] = new SwerveModule(3,4, 13);
+        module[1] = new SwerveModule(5,6, 15);
+        module[2] = new SwerveModule(7,8, 17);
 
 
         joystick=m_joystick;
@@ -72,8 +72,8 @@ public class DriveSystem extends SubsystemBase{
         SmartDashboard.putNumber("xy", vy);
 
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vy, vx, omega,  new Rotation2d(0));
-        double encPosition[] = new double[4];
-        SwerveModuleState StatesOptimized[] = new SwerveModuleState[4];
+        double encPosition[] = new double[3];
+        SwerveModuleState StatesOptimized[] = new SwerveModuleState[3];
 
 
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
@@ -82,10 +82,10 @@ public class DriveSystem extends SubsystemBase{
 
 
         int i = 0;
-        while (i<4){
+        while (i<3){
         
-        encPosition[i]=module[i].getRmotorpos();
-            
+        encPosition[i]=module[i].getRmotorpos()*Math.PI/180.;
+        
         StatesOptimized[i] = module[i].optimize(moduleStates[i],encPosition[i]);
         
         
