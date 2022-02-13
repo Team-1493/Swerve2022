@@ -28,7 +28,6 @@ public class test
         pigeon.setYaw(0);
     }
     
-    
     public double getangle() 
     {
         double[] ypr_deg = new double[3];
