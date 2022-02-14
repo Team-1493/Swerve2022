@@ -28,6 +28,8 @@ public class SwerveModule{
  TalonFX Dmotor;
  TalonFX Rmotor;
  CANCoder canCoder;
+
+ 
 String tname="";
  double encoderPer100ms = (0.1 * gearRatio * encoderPerRotation) / wheelCircumference;
  double radianstoUnits = maxUnitsForPosition/ (2*Math.PI);
@@ -42,7 +44,7 @@ public SwerveModule(int port1, int port2, int port3)
 
     canCoder.configFactoryDefault();
     canCoder.configSensorDirection(false);
-
+    canCoder.setPosition(0);
 
 
     Dmotor.configFactoryDefault();
