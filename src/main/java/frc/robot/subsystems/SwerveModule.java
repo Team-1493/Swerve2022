@@ -109,7 +109,6 @@ public SwerveModuleState optimize(SwerveModuleState moduleStates, double encPosi
 
 
     double angleDifference = (goalPosition - modulePosition);
-
     
     SmartDashboard.putNumber("goalPosition",goalPosition);
     SmartDashboard.putNumber("modulePosition",modulePosition);
@@ -117,20 +116,30 @@ public SwerveModuleState optimize(SwerveModuleState moduleStates, double encPosi
 
     SmartDashboard.putNumber("AngleDifference",angleDifference);
 
-    if (Math.abs(angleDifference) <= 90){
-        optimizedAngle = angleDifference;
-        optimizedVelocity = Math.abs(moduleVelocity);
+    if (angleDifference > 270){
+        angleDifference = angleDifference -360;
     }
 
-    if (angleDifference > 90){
-        optimizedAngle = (goalPosition - 180);
-        optimizedVelocity =  -1 * Math.abs(moduleVelocity);
+    if (angleDifference < -270){
+        angleDifference = angleDifference + 360;
     }
 
-    if (angleDifference < -90){
-        optimizedAngle = (goalPosition + 180);
-        optimizedVelocity =  -1 * Math.abs(moduleVelocity);
+    optimizedVelocity = moduleVelocity;
+
+
+
+    if (angleDifference >= 90){
+        angleDifference = (angleDifference - 180);
+        optimizedVelocity =  -1 * moduleVelocity;
     }
+
+    else if (angleDifference < -90){
+        angleDifference = (angleDifference + 180);
+        optimizedVelocity =  -1 * moduleVelocity;
+    }
+
+    optimizedAngle = angleDifference + modulePosition*180/Math.PI;
+
 
     return new SwerveModuleState(optimizedVelocity,new Rotation2d((optimizedAngle)*(Math.PI/180)));
 }
