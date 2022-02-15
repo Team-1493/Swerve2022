@@ -13,14 +13,57 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Stick extends SubsystemBase{
   private Joystick mystick;
+   Joystick joystick = new Joystick(0);
+   
+   double RjoystickX = joystick.getRawAxis(2);
+   double RjoystickY = joystick.getRawAxis(3);
+   double LjoystickX = joystick.getRawAxis(0);
+   double LjoystickY = joystick.getRawAxis(1);
+   
 
-  public Stick(){
 
+  public Stick(){}
+
+
+
+
+  public double[] getjoyaxis(){
+
+    double RjoystickX = joystick.getRawAxis(2);
+    double RjoystickY = joystick.getRawAxis(3);
+    double LjoystickX = joystick.getRawAxis(0);
+    double LjoystickY = joystick.getRawAxis(1);
+
+    
+
+    if (Math.abs(RjoystickX) < 0.05) {
+      RjoystickX = 0;
+    }
+    
+    if (Math.abs(RjoystickY) < 0.05) {
+      RjoystickY = 0;
+    }
+    
+    if (Math.abs(LjoystickX) < 0.05) {
+      LjoystickX = 0;
+    }
+    
+    if (Math.abs(LjoystickY) < 0.05) {
+        LjoystickY = 0;
+    }
+    
+    double[] joyaxis={RjoystickX, RjoystickY, LjoystickX, LjoystickY};
+    return joyaxis;
   }
+  
+
 
 
 // need this to provide the Joystick instance to the button bindings
 public Joystick getStick(){
   return this.mystick;
 }
+
+
+
 }
