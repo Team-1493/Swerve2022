@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public class test
+public class Gyro
 {
    private PigeonIMU pigeon = new PigeonIMU(20);
     {

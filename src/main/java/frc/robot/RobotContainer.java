@@ -6,8 +6,13 @@ package frc.robot;
 
 
 import frc.robot.Devices.Stick;
+import frc.robot.commands.Drive;
+import frc.robot.commands.IntakeShooter.IntakeBallToLower;
 import frc.robot.subsystems.DriveSystem;
+import frc.robot.subsystems.IntakeConveyor;
+import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
 
@@ -17,17 +22,22 @@ public class RobotContainer {
   private final Stick joystick = new Stick();
   private final DriveSystem drive = new DriveSystem(joystick);
   private final Drive DriveCommand = new Drive(drive);
+  public final Shooter shooter = new Shooter();
+  public final IntakeConveyor intake = new IntakeConveyor();
+  public final Command m_intakeBalltoLower  = new IntakeBallToLower(intake);
+ 
 
 
 
   
   public RobotContainer() {
-    // Configure the button bindings
+    drive.setDefaultCommand(DriveCommand);
     configureButtonBindings();
   }
 
   
   private void configureButtonBindings() {
+    new JoystickButton(joystick.getStick(),14).whenPressed(m_intakeBalltoLower); 
 
   }
 
