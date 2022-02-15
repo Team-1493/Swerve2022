@@ -16,6 +16,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Stick joystick = new Stick();
   private final DriveSystem drive = new DriveSystem(joystick);
+  private final Drive DriveCommand = new Drive(drive);
+
 
 
   
